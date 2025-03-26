@@ -1,5 +1,5 @@
 import type React from "react"
-import "~/app/globals.css"
+import "~/styles/globals.css"
 import { Inter } from "next/font/google"
 import { Sidebar } from "~/components/main-sidebar"
 
