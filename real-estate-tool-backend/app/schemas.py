@@ -2,9 +2,9 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 
 class PredictRequest(BaseModel):
-    size: str
-    lease: str
-    remaining_months: str
+    size: int
+    lease: int
+    remaining_months: int
     flat_type: str
     floor_cat: str
 

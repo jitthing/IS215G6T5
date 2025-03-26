@@ -1,4 +1,4 @@
-import HousingPricePredictor from "~/components/housing-price-predictor"
+import HousingPricePredictor from "~/components/housing-price-predictor";
 
 export default function PricePredictorPage() {
   return (
@@ -12,27 +12,33 @@ export default function PricePredictorPage() {
             <HousingPricePredictor />
           </div>
           <div>
-            <div className="rounded-lg border bg-card p-6">
+            <div className="bg-card rounded-lg border p-6">
               <h3 className="text-lg font-semibold">About the Predictor</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                This tool uses a regression model to predict housing prices based on various factors including floor
-                area, remaining lease, flat type, and floor level. The predictions are estimates and actual prices may
-                vary.
+              <p className="text-muted-foreground mt-2 text-sm">
+                This tool uses a regression model to predict housing prices
+                based on various factors including floor area, remaining lease,
+                flat type, and floor level. The predictions are estimates and
+                actual prices may vary.
               </p>
               <h4 className="mt-4 font-medium">How it works:</h4>
-              <ul className="mt-2 list-disc pl-5 text-sm text-muted-foreground">
+              <ul className="text-muted-foreground mt-2 list-disc pl-5 text-sm">
                 <li>Enter all required property details</li>
                 <li>Our model analyzes the inputs</li>
                 <li>Get an estimated market value</li>
               </ul>
-              <p className="mt-4 text-sm text-muted-foreground">
-                Use this tool to help clients understand potential property values or to assist in pricing strategies.
+              <p className="text-muted-foreground mt-4 text-sm">
+                Use this tool to help clients understand potential property
+                values or to assist in pricing strategies.
               </p>
+              {/* <p className="mt-4 text-sm text-red-500">
+                Disclaimer: This model only accounts for 70% of the variation in
+                price. There might be other factors like location that might not
+                be accounted for in this model.
+              </p> */}
             </div>
           </div>
         </div>
       </main>
     </div>
-  )
+  );
 }
-
