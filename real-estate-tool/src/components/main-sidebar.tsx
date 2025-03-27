@@ -1,5 +1,14 @@
-import Link from "next/link"
-import { Building, Calculator, Calendar, Home, LineChart, LogOut, Settings, Users } from "lucide-react"
+import Link from "next/link";
+import {
+  Building,
+  Calculator,
+  Calendar,
+  Home,
+  LineChart,
+  LogOut,
+  Settings,
+  Users,
+} from "lucide-react";
 
 export function Sidebar() {
   return (
@@ -8,7 +17,7 @@ export function Sidebar() {
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
           <Link href="/" className="flex items-center gap-2 font-semibold">
             <Building className="h-6 w-6" />
-            <span>ERA CRM</span>
+            <span>ERA Agent Hub</span>
           </Link>
         </div>
         <div className="flex-1 overflow-auto py-2">
@@ -72,6 +81,5 @@ export function Sidebar() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
