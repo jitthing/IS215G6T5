@@ -20,11 +20,11 @@ Go to the project backend directory
 
 Download the [dataset](https://drive.google.com/file/d/1z9I760M_adgkgqqzQLNpbqx34vZk8oj1/view?usp=drive_link) into this directory
 
-Run the backend as a server
+Run the backend as a container
 
 ```bash
-cd ..
-docker compose up -d --build
+  cd ..
+  docker compose up -d --build
 ```
 
 Install dependencies in the frontend build
