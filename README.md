@@ -43,7 +43,7 @@ Copy the .env.example into a .env
 Start the server
 
 ```bash
-  npm run start
+  npm run dev
 ```
 
 Access the site at http://localhost:3000
