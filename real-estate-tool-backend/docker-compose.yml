@@ -16,9 +16,35 @@ services:
     build: ./matching-service
     ports:
       - "8721:8000"
+    depends_on:
+      matching-db:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@matching-db:5432/matching_db
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
       timeout: 5s
       retries: 3
     restart: always
+
+  matching-db:
+    container_name: matching-db
+    image: postgres:14-alpine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=matching_db
+    volumes:
+      - matching-db-data:/var/lib/postgresql/data
+      - ./matching-service/db/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d matching_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  matching-db-data:

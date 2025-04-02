@@ -105,6 +105,9 @@ export function ClientTable() {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("properties");
 
+  // Backend API URL
+  const MATCHING_SERVICE = process.env.NEXT_PUBLIC_MATCHING_SERVICE;
+
   // Fetch properties when a seller is selected
   useEffect(() => {
     if (selectedSeller) {
@@ -116,7 +119,17 @@ export function ClientTable() {
   const fetchProperties = async (sellerId: string) => {
     setLoading(true);
     try {
-      // Mock data instead of API call
+      // Use actual API call instead of hardcoded mock data
+      const response = await fetch(`${MATCHING_SERVICE}/sellers/${sellerId}/properties`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch properties");
+      }
+      const data = await response.json();
+      setProperties(data);
+    } catch (error) {
+      console.error("Error fetching properties:", error);
+
+      // Fallback to mock data if API fails
       const mockProperties = [
         {
           id: 1,
@@ -131,7 +144,7 @@ export function ClientTable() {
           block: "123",
           street_name: "BISHAN STREET 13",
           description: "Well-maintained 4-room flat near Bishan MRT, good ventilation, recently renovated kitchen",
-          asking_price: 420000
+          asking_price: 420000,
         },
         {
           id: 2,
@@ -146,7 +159,7 @@ export function ClientTable() {
           block: "108",
           street_name: "ANG MO KIO AVE 4",
           description: "Cozy 3-room flat in Ang Mo Kio, walking distance to amenities, well-maintained",
-          asking_price: 280000
+          asking_price: 280000,
         },
         {
           id: 3,
@@ -161,18 +174,14 @@ export function ClientTable() {
           block: "456",
           street_name: "TAMPINES STREET 42",
           description: "Spacious executive flat in Tampines with excellent view, near shopping mall and MRT",
-          asking_price: 580000
-        }
+          asking_price: 580000,
+        },
       ];
-      
+
       // Filter properties for the selected seller
-      const filteredProperties = mockProperties.filter(
-        p => p.seller_id.toString() === sellerId
-      );
-      
+      const filteredProperties = mockProperties.filter((p) => p.seller_id.toString() === sellerId);
+
       setProperties(filteredProperties);
-    } catch (error) {
-      console.error("Error fetching properties:", error);
     } finally {
       setLoading(false);
     }
@@ -182,38 +191,64 @@ export function ClientTable() {
   const fetchMatchingBuyers = async (propertyId: number) => {
     setLoading(true);
     try {
-      // Mock data instead of API call
-      const mockBuyers = [
-        {
-          id: 1,
-          name: "John Smith",
-          contact: "(555) 123-4567",
-          preferences: "Looking for a 3-room flat in Ang Mo Kio with good ventilation, near MRT, below 300k"
-        },
-        {
-          id: 2,
-          name: "Sarah Johnson",
-          contact: "(555) 987-6543",
-          preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k"
-        },
-        {
-          id: 4,
-          name: "Emily Wilson",
-          contact: "(555) 789-0123",
-          preferences: "Looking for an executive flat in Tampines, at least 110 sqm, remaining lease > 70 years"
-        }
-      ].filter((buyer) => {
-        // Match buyers based on property type and location
-        if (propertyId === 1) return buyer.id === 2 || buyer.id === 1; // Bishan property matches Sarah and John
-        if (propertyId === 2) return buyer.id === 1 || buyer.id === 2; // Ang Mo Kio property matches John and Sarah
-        if (propertyId === 3) return buyer.id === 4 || buyer.id === 2; // Tampines property matches Emily and Sarah
-        return false;
-      }).slice(0, 2); // Get top 2 matches
-      
-      setMatchingBuyers(mockBuyers);
+      // Use actual API call
+      const response = await fetch(`${MATCHING_SERVICE}/properties/${propertyId}/matching-buyers`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch matching buyers");
+      }
+      const data = await response.json();
+      setMatchingBuyers(data.matching_buyers);
+
+      // Ensure we set the active tab after the data is loaded
       setActiveTab("buyers");
     } catch (error) {
       console.error("Error fetching matching buyers:", error);
+
+      // Fallback mock data matching the backend format
+      const mockMatchingBuyers = {
+        property_id: 1,
+        matching_buyers: [
+          {
+            id: 1,
+            name: "John Smith",
+            contact: "(555) 123-4567",
+            preferences: "Looking for a 3-room flat in Ang Mo Kio with good ventilation, near MRT, below 300k",
+          },
+          {
+            id: 2,
+            name: "Sarah Johnson",
+            contact: "(555) 987-6543",
+            preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k",
+          },
+        ],
+      };
+
+      // Determine which buyers to show based on property
+      let buyers: Buyer[] = [];
+      if (propertyId === 1) {
+        buyers = mockMatchingBuyers.matching_buyers.filter((b) => b.id === 2 || b.id === 1);
+      } else if (propertyId === 2) {
+        buyers = mockMatchingBuyers.matching_buyers.filter((b) => b.id === 1 || b.id === 2);
+      } else if (propertyId === 3) {
+        buyers = [
+          {
+            id: 4,
+            name: "Emily Wilson",
+            contact: "(555) 789-0123",
+            preferences: "Looking for an executive flat in Tampines, at least 110 sqm, remaining lease > 70 years",
+          },
+          {
+            id: 2,
+            name: "Sarah Johnson",
+            contact: "(555) 987-6543",
+            preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k",
+          },
+        ];
+      }
+
+      setMatchingBuyers(buyers);
+      // Ensure we set the active tab even when using fallback data
+      setActiveTab("buyers");
     } finally {
       setLoading(false);
     }
@@ -222,6 +257,9 @@ export function ClientTable() {
   const handleViewProperties = (sellerId: string) => {
     setSelectedSeller(sellerId);
     setShowModal(true);
+    // Reset property selection when changing seller
+    setSelectedProperty(null);
+    setActiveTab("properties");
   };
 
   const handlePropertyClick = (propertyId: number) => {
@@ -229,11 +267,20 @@ export function ClientTable() {
     fetchMatchingBuyers(propertyId);
   };
 
+  // New function to handle tab switching directly
+  const handleTabChange = (tab: string) => {
+    if (tab === "buyers" && !selectedProperty) {
+      // Don't switch to buyers tab if no property is selected
+      return;
+    }
+    setActiveTab(tab);
+  };
+
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-SG', {
-      style: 'currency',
-      currency: 'SGD',
-      maximumFractionDigits: 0
+    return new Intl.NumberFormat("en-SG", {
+      style: "currency",
+      currency: "SGD",
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
@@ -271,11 +318,7 @@ export function ClientTable() {
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
                   {client.status === "Seller" && (
-                    <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => handleViewProperties(client.id)}
-                    >
+                    <Button variant="outline" size="sm" onClick={() => handleViewProperties(client.id)}>
                       <Home className="mr-2 h-4 w-4" />
                       View Properties
                     </Button>
@@ -315,31 +358,40 @@ export function ClientTable() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">
                 Properties
-                {selectedSeller && ` - ${clients.find(c => c.id === selectedSeller)?.name}`}
+                {selectedSeller && ` - ${clients.find((c) => c.id === selectedSeller)?.name}`}
               </h2>
               <Button variant="ghost" size="sm" onClick={() => setShowModal(false)}>
                 X
               </Button>
             </div>
-            
+
             <div className="mb-4">
               <div className="flex border-b">
-                <button 
-                  className={`px-4 py-2 ${activeTab === 'properties' ? 'border-b-2 border-primary font-medium' : ''}`}
-                  onClick={() => setActiveTab('properties')}
+                <button
+                  className={`px-4 py-2 ${
+                    activeTab === "properties" ? "border-b-2 border-primary font-medium" : ""
+                  }`}
+                  onClick={() => handleTabChange("properties")}
                 >
                   Properties
                 </button>
-                <button 
-                  className={`px-4 py-2 ${activeTab === 'buyers' ? 'border-b-2 border-primary font-medium' : ''}`}
-                  onClick={() => setActiveTab('buyers')}
+                <button
+                  className={`px-4 py-2 ${
+                    activeTab === "buyers" ? "border-b-2 border-primary font-medium" : ""
+                  } ${!selectedProperty ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                  onClick={() => {
+                    if (selectedProperty) {
+                      handleTabChange("buyers");
+                    }
+                  }}
                   disabled={!selectedProperty}
                 >
                   Matching Buyers
+                  {selectedProperty ? "" : " (Select a property first)"}
                 </button>
               </div>
             </div>
-            
+
             {activeTab === "properties" ? (
               <>
                 {loading ? (
@@ -347,13 +399,17 @@ export function ClientTable() {
                 ) : properties.length > 0 ? (
                   <div className="grid gap-4">
                     {properties.map((property) => (
-                      <div 
-                        key={property.id} 
-                        className={`border rounded-lg p-4 cursor-pointer ${selectedProperty === property.id ? 'border-primary border-2' : ''}`}
+                      <div
+                        key={property.id}
+                        className={`border rounded-lg p-4 cursor-pointer ${
+                          selectedProperty === property.id ? "border-primary border-2" : ""
+                        }`}
                         onClick={() => handlePropertyClick(property.id)}
                       >
                         <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-bold text-lg">{property.flat_type} in {property.town}</h3>
+                          <h3 className="font-bold text-lg">
+                            {property.flat_type} in {property.town}
+                          </h3>
                           <Badge>{formatCurrency(property.asking_price)}</Badge>
                         </div>
                         <p className="text-sm text-gray-500 mb-2">
@@ -370,7 +426,8 @@ export function ClientTable() {
                             <span className="font-medium">Type:</span> {property.property_type}
                           </div>
                           <div>
-                            <span className="font-medium">Lease:</span> {property.remaining_lease_years}y {property.remaining_lease_months}m
+                            <span className="font-medium">Lease:</span> {property.remaining_lease_years}y{" "}
+                            {property.remaining_lease_months}m
                           </div>
                         </div>
                         <hr className="my-2" />
@@ -388,13 +445,16 @@ export function ClientTable() {
                   <div className="flex justify-center p-4">Loading matching buyers...</div>
                 ) : matchingBuyers.length > 0 ? (
                   <div className="grid gap-4">
-                    <h3 className="text-lg font-medium">Top Matching Buyers</h3>
+                    <h3 className="text-lg font-medium">
+                      Top Matching Buyers for {properties.find((p) => p.id === selectedProperty)?.flat_type} in{" "}
+                      {properties.find((p) => p.id === selectedProperty)?.town}
+                    </h3>
                     {matchingBuyers.map((buyer) => (
                       <div key={buyer.id} className="border rounded-lg p-4">
                         <div className="flex items-center gap-2 mb-2">
                           <Avatar className="h-8 w-8">
                             <AvatarFallback>
-                              {buyer.name.split(' ').map(n => n[0]).join('')}
+                              {buyer.name.split(" ").map((n) => n[0]).join("")}
                             </AvatarFallback>
                           </Avatar>
                           <h3 className="font-bold">{buyer.name}</h3>

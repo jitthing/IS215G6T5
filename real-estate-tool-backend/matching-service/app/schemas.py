@@ -1,9 +1,17 @@
 from pydantic import BaseModel
 from typing import Optional, List
 
-class Property(BaseModel):
-    id: Optional[int] = None
-    seller_id: int
+# Base schemas for creation operations
+class BuyerCreate(BaseModel):
+    name: str
+    contact: str
+    preferences: str
+
+class SellerCreate(BaseModel):
+    name: str
+    contact: str
+
+class PropertyCreate(BaseModel):
     property_type: str
     floor_area_sqm: float
     remaining_lease_years: int
@@ -16,17 +24,29 @@ class Property(BaseModel):
     description: str
     asking_price: float
 
-class Buyer(BaseModel):
-    id: Optional[int] = None
-    name: str
-    contact: str
-    preferences: str  # This will contain the buyer's requirements as text
+# Schemas for response models including IDs
+class Property(PropertyCreate):
+    id: int
+    seller_id: int
 
-class Seller(BaseModel):
-    id: Optional[int] = None
-    name: str
-    contact: str
+    class Config:
+        orm_mode = True
+
+class Buyer(BuyerCreate):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class Seller(SellerCreate):
+    id: int
+
+    class Config:
+        orm_mode = True
 
 class PropertyWithMatchingBuyers(BaseModel):
     property: Property
     matching_buyers: List[Buyer]
+
+    class Config:
+        orm_mode = True
