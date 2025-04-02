@@ -1,0 +1,24 @@
+services:
+  housing-price-predictor:
+    container_name: housing-price-predictor
+    build: ./price-predictor
+    ports:
+      - "8720:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: always
+
+  matching-service:
+    container_name: agent-matching-service
+    build: ./matching-service
+    ports:
+      - "8721:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: always
