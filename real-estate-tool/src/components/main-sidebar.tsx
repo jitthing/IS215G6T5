@@ -29,20 +29,14 @@ export function Sidebar() {
               <Home className="h-4 w-4" />
               Dashboard
             </Link>
-            <Link
+            {/* <Link
               href="/properties"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
             >
               <Building className="h-4 w-4" />
               Properties
-            </Link>
-            <Link
-              href="/clients"
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-            >
-              <Users className="h-4 w-4" />
-              Clients
-            </Link>
+            </Link> */}
+            
             <Link
               href="/calendar"
               className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
@@ -56,6 +50,20 @@ export function Sidebar() {
             >
               <LineChart className="h-4 w-4" />
               Analytics
+            </Link>
+            <Link
+              href="/sellers"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+            >
+              <Users className="h-4 w-4" />
+              Sellers
+            </Link>
+            <Link
+              href="/buyers"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+            >
+              <Users className="h-4 w-4" />
+              Buyers
             </Link>
             <Link
               href="/price-predictor"
@@ -73,7 +81,7 @@ export function Sidebar() {
             </Link>
           </nav>
         </div>
-        <div className="mt-auto p-4">
+        <div className="mt-auto p-4 fixed bottom-0">
           <button className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50">
             <LogOut className="h-4 w-4" />
             Logout

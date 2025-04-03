@@ -37,3 +37,24 @@ def find_matching_buyers(property: Property, buyers: List[Buyer], top_n: int = 5
     
     # Return top N buyers
     return [buyer for buyer, _ in buyer_scores[:top_n]]
+
+def find_suggested_properties(buyer: Buyer, properties: List[Property], top_n: int = 5) -> List[Property]:
+    """Find the top N properties that match a buyer based on semantic similarity"""
+    if not properties:
+        return []
+    
+    buyer_embedding = get_buyer_embedding(buyer)
+    
+    # Calculate similarity scores for all properties
+    property_scores = []
+    for property in properties:
+        property_embedding = get_property_embedding(property)
+        # Cosine similarity
+        similarity = np.dot(buyer_embedding, property_embedding) / (np.linalg.norm(buyer_embedding) * np.linalg.norm(property_embedding))
+        property_scores.append((property, similarity))
+    
+    # Sort by similarity score (highest first)
+    property_scores.sort(key=lambda x: x[1], reverse=True)
+    
+    # Return top N properties
+    return [property for property, _ in property_scores[:top_n]]

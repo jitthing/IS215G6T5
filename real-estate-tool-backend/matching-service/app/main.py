@@ -2,7 +2,8 @@ from fastapi import FastAPI, HTTPException, Request, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from . import schemas, models, database
-from .matching import find_matching_buyers
+from . import matching
+# from .matching import find_matching_buyers, find_suggested_properties
 from typing import List
 import warnings
 
@@ -25,13 +26,19 @@ app.add_middleware(
 def health_check():
     return {"status": "ok"}
 
-@app.get("/buyers", response_model=List[schemas.Buyer])
-def get_buyers(db: Session = Depends(database.get_db)):
-    return db.query(models.Buyer).all()
+@app.get("/buyers/{id}", response_model=List[schemas.Buyer])
+def get_buyers(id: int, db: Session = Depends(database.get_db)):
+    buyers = db.query(models.Buyer).filter(models.Buyer.agent_id == id).all()
+    if not buyers:
+        raise HTTPException(status_code=404, detail=f"No buyers found for agent with id {id}")
+    return buyers
 
-@app.get("/sellers", response_model=List[schemas.Seller])
-def get_sellers(db: Session = Depends(database.get_db)):
-    return db.query(models.Seller).all()
+@app.get("/sellers/{id}", response_model=List[schemas.Seller])
+def get_sellers(id: int, db: Session = Depends(database.get_db)):
+    sellers = db.query(models.Seller).filter(models.Seller.agent_id == id).all()
+    if not sellers:
+        raise HTTPException(status_code=404, detail=f"No sellers found for agent with id {id}")
+    return sellers
 
 @app.post("/sellers/{seller_id}/properties", response_model=schemas.Property)
 def add_property(seller_id: int, property_data: schemas.PropertyCreate, db: Session = Depends(database.get_db)):
@@ -68,11 +75,31 @@ def get_matching_buyers(property_id: int, db: Session = Depends(database.get_db)
     buyers = db.query(models.Buyer).all()
     
     # Find matching buyers
-    matching_buyers = find_matching_buyers(property, buyers)
+    matching_buyers = matching.find_matching_buyers(property, buyers)
     
     return {
         "property": property,
         "matching_buyers": matching_buyers
+    }
+
+@app.get("/buyers/{buyer_id}/suggested-properties")
+def get_suggested_properties(buyer_id: int, db: Session = Depends(database.get_db)):
+    # Find the buyer
+    buyer = db.query(models.Buyer).filter(models.Buyer.id == buyer_id).first()
+    if not buyer:
+        raise HTTPException(status_code=404, detail="Buyer not found")
+    
+    # Get all properties
+    properties = db.query(models.Property).all()
+    print(f"[DEBUG] Properties: {properties}")
+    
+    # Find matching properties
+    suggested_properties = matching.find_suggested_properties(buyer, properties)
+    print(f"[DEBUG] Suggested: suggested_properties")
+    
+    return {
+        "buyer": buyer,
+        "suggested_properties": suggested_properties
     }
 
 @app.post("/buyers", response_model=schemas.Buyer)

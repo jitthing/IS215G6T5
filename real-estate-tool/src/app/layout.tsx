@@ -2,6 +2,7 @@ import type React from "react"
 import "~/styles/globals.css"
 import { Inter } from "next/font/google"
 import { Sidebar } from "~/components/main-sidebar"
+import { Toaster } from "~/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -17,6 +18,7 @@ export default function RootLayout({
           <Sidebar />
           <div className="flex-1">{children}</div>
         </div>
+        <Toaster />
       </body>
     </html>
   )

@@ -10,6 +10,7 @@ class Buyer(Base):
     contact = Column(String)
     preferences = Column(String)
     embedded_string = Column(String, nullable=True)
+    agent_id = Column(Integer, nullable=True)
 
 class Seller(Base):
     __tablename__ = "sellers"
@@ -17,6 +18,7 @@ class Seller(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     contact = Column(String)
+    agent_id = Column(Integer, nullable=True)
     
     # Relationship with properties
     properties = relationship("Property", back_populates="seller")

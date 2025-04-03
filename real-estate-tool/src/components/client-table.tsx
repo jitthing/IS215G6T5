@@ -13,7 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
-import { Edit, MoreHorizontal, Trash, Home, User } from "lucide-react";
+import { Edit, MoreHorizontal, Trash, Home, User, Plus } from "lucide-react";
+import { AddPropertyForm } from "./add-property-form";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "~/components/ui/dialog";
+import { set } from "date-fns";
 
 // Types to match our backend
 interface Property {
@@ -41,46 +44,19 @@ interface Buyer {
 
 const clients = [
   {
-    id: "1",
-    name: "John Smith",
-    email: "john.smith@example.com",
-    phone: "(555) 123-4567",
-    status: "Buyer",
-    lastContact: "2 days ago",
-    avatar: "JS",
-  },
-  {
-    id: "2",
-    name: "Sarah Johnson",
-    email: "sarah.j@example.com",
-    phone: "(555) 987-6543",
-    status: "Buyer",
-    lastContact: "1 week ago",
-    avatar: "SJ",
-  },
-  {
     id: "3",
     name: "Robert Davis",
     email: "robert.d@example.com",
-    phone: "(555) 456-7890",
+    phone: "+65 94567890",
     status: "Seller",
     lastContact: "3 days ago",
     avatar: "RD",
   },
   {
-    id: "4",
-    name: "Emily Wilson",
-    email: "emily.w@example.com",
-    phone: "(555) 789-0123",
-    status: "Buyer",
-    lastContact: "Today",
-    avatar: "EW",
-  },
-  {
     id: "7",
     name: "James Lee",
     email: "james.lee@example.com",
-    phone: "(555) 567-8901",
+    phone: "+65 95678901",
     status: "Seller",
     lastContact: "5 days ago",
     avatar: "JL",
@@ -89,12 +65,18 @@ const clients = [
     id: "8",
     name: "Sophia Tan",
     email: "sophia.t@example.com",
-    phone: "(555) 678-9012",
+    phone: "+65 96789012",
     status: "Seller",
     lastContact: "Yesterday",
     avatar: "ST",
   },
 ];
+
+interface Seller{
+  id: number,
+  name: string,
+  contact: string
+}
 
 export function ClientTable() {
   const [selectedSeller, setSelectedSeller] = useState<string | null>(null);
@@ -104,6 +86,9 @@ export function ClientTable() {
   const [matchingBuyers, setMatchingBuyers] = useState<Buyer[]>([]);
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("properties");
+  const [addPropertyModalOpen, setAddPropertyModalOpen] = useState(false);
+  const [sellers, setSellers] = useState<Seller[]>([]);
+  const [isSellers, setIsSellers] = useState(false);
 
   // Backend API URL
   const MATCHING_SERVICE = process.env.NEXT_PUBLIC_MATCHING_SERVICE;
@@ -114,6 +99,20 @@ export function ClientTable() {
       fetchProperties(selectedSeller);
     }
   }, [selectedSeller]);
+
+  useEffect(() => {
+    const fetchSellers = async () => {
+      const sellers = await fetch(`${MATCHING_SERVICE}/sellers/1`);
+      if (!sellers.ok) {
+        throw new Error("Failed to fetch sellers");
+      }
+      const data = await sellers.json();
+      setSellers(data);
+    }
+    if (sellers.length === 0) {
+      fetchSellers();
+    }
+  }, []); // Fixed syntax: moved closing parenthesis before the dependency array
 
   // Fetch properties for a seller
   const fetchProperties = async (sellerId: string) => {
@@ -211,13 +210,13 @@ export function ClientTable() {
           {
             id: 1,
             name: "John Smith",
-            contact: "(555) 123-4567",
+            contact: "+65 91234567",
             preferences: "Looking for a 3-room flat in Ang Mo Kio with good ventilation, near MRT, below 300k",
           },
           {
             id: 2,
             name: "Sarah Johnson",
-            contact: "(555) 987-6543",
+            contact: "+65 99876543",
             preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k",
           },
         ],
@@ -234,13 +233,13 @@ export function ClientTable() {
           {
             id: 4,
             name: "Emily Wilson",
-            contact: "(555) 789-0123",
+            contact: "+65 97890123",
             preferences: "Looking for an executive flat in Tampines, at least 110 sqm, remaining lease > 70 years",
           },
           {
             id: 2,
             name: "Sarah Johnson",
-            contact: "(555) 987-6543",
+            contact: "+65 99876543",
             preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k",
           },
         ];
@@ -276,6 +275,21 @@ export function ClientTable() {
     setActiveTab(tab);
   };
 
+  const handleAddProperty = (sellerId: string) => {
+    setSelectedSeller(sellerId);
+    setAddPropertyModalOpen(true);
+  };
+
+  const handlePropertyAdded = () => {
+    // Close the modal
+    setAddPropertyModalOpen(false);
+
+    // If we're currently viewing properties for this seller, refresh them
+    if (selectedSeller && showModal) {
+      fetchProperties(selectedSeller);
+    }
+  };
+
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-SG", {
       style: "currency",
@@ -290,39 +304,41 @@ export function ClientTable() {
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
+            {/* <TableHead>Email</TableHead> */}
             <TableHead>Phone</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Last Contact</TableHead>
+            {/* <TableHead>Status</TableHead> */}
+            {/* <TableHead>Last Contact</TableHead> */}
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {clients.map((client) => (
+          {sellers.map((client) => (
             <TableRow key={client.id}>
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Avatar" />
-                    <AvatarFallback>{client.avatar}</AvatarFallback>
+                    <AvatarFallback>U</AvatarFallback>
                   </Avatar>
                   {client.name}
                 </div>
               </TableCell>
-              <TableCell>{client.email}</TableCell>
-              <TableCell>{client.phone}</TableCell>
-              <TableCell>
+              {/* <TableCell>{client.email}</TableCell> */}
+              <TableCell>{client.contact}</TableCell>
+              {/* <TableCell>
                 <Badge variant={client.status === "Seller" ? "secondary" : "default"}>{client.status}</Badge>
               </TableCell>
-              <TableCell>{client.lastContact}</TableCell>
+              <TableCell>{client.lastContact}</TableCell> */}
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
-                  {client.status === "Seller" && (
-                    <Button variant="outline" size="sm" onClick={() => handleViewProperties(client.id)}>
-                      <Home className="mr-2 h-4 w-4" />
-                      View Properties
-                    </Button>
-                  )}
+                      <Button variant="outline" size="sm" onClick={() => handleViewProperties(String(client.id))}>
+                        <Home className="mr-2 h-4 w-4" />
+                        View Properties
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => handleAddProperty(String(client.id))}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Add Property
+                      </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -475,6 +491,21 @@ export function ClientTable() {
           </div>
         </div>
       )}
+
+      {/* Add Property Dialog */}
+      <Dialog open={addPropertyModalOpen} onOpenChange={setAddPropertyModalOpen}>
+        <DialogContent className="sm:max-w-[700px]">
+          <DialogHeader>
+            <DialogTitle>
+              Add New Property
+              {selectedSeller && ` for ${clients.find((c) => c.id === selectedSeller)?.name}`}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedSeller && (
+            <AddPropertyForm sellerId={selectedSeller} onSuccess={handlePropertyAdded} />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

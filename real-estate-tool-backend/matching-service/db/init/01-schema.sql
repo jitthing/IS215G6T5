@@ -3,13 +3,15 @@ CREATE TABLE IF NOT EXISTS buyers (
     name VARCHAR(255) NOT NULL,
     contact VARCHAR(255) NOT NULL,
     preferences TEXT NOT NULL,
-    embedded_string TEXT
+    embedded_string TEXT,
+    agent_id INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS sellers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    contact VARCHAR(255) NOT NULL
+    contact VARCHAR(255) NOT NULL,
+    agent_id INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS properties (
