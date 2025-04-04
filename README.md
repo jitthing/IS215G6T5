@@ -1,6 +1,7 @@
 # IS215G6T5
 
-DBTT Wireframe with AI and Analytics Tool
+DBTT Wireframe with AI and Analytics Tool.
+Analytics and AI algorithm code can be found at `real-estate-tool-backend/price-predictor/app/main.py` and `real-estate-tool-backend/matching-service/app/matching.py` respectively.
 
 ## Run Locally
 
