@@ -19,12 +19,11 @@ Go to the project backend directory
   cd IS215G6T5/real-estate-tool-backend
 ```
 
-Download the [dataset](https://drive.google.com/file/d/1z9I760M_adgkgqqzQLNpbqx34vZk8oj1/view?usp=drive_link) into this directory
+Download the [dataset](https://drive.google.com/file/d/1z9I760M_adgkgqqzQLNpbqx34vZk8oj1/view?usp=drive_link) into the `real-estate-tool-backend/price-predictor` directory.
 
-Run the backend as a container
+Start the backend containers with docker.
 
 ```bash
-  cd ..
   docker compose up -d --build
 ```
 
