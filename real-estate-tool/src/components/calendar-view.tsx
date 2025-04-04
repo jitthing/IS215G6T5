@@ -3,6 +3,6 @@
 import { Calendar } from "~/components/ui/calendar"
 
 export function CalendarView() {
-  return <Calendar mode="single" className="w-full" />
+  return <Calendar mode="single" className="w-full h-full" />
 }
 

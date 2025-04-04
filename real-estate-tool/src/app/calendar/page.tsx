@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
@@ -5,8 +8,11 @@ import { CalendarView } from "~/components/calendar-view"
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
 import { Button } from "~/components/ui/button"
 import { UpcomingAppointments } from "~/components/upcoming-appointments"
+import { SpecialOccasions } from "~/components/special-occasions"
 
 export default function CalendarPage() {
+  const [view, setView] = useState("month");
+
   return (
     <div className="flex min-h-screen w-full flex-col">
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -19,7 +25,7 @@ export default function CalendarPage() {
             </Button>
           </div>
         </div>
-        <Tabs defaultValue="month" className="space-y-4">
+        <Tabs value={view} onValueChange={setView} className="space-y-4">
           <div className="flex items-center justify-between">
             <TabsList>
               <TabsTrigger value="day">Day</TabsTrigger>
@@ -51,14 +57,14 @@ export default function CalendarPage() {
               </Select>
             </div>
           </div>
-          <TabsContent value="month" className="space-y-4">
+          <TabsContent value="day" className="space-y-4">
             <div className="grid gap-4 md:grid-cols-[1fr_300px]">
               <Card>
                 <CardHeader>
-                  <CardTitle>March 2025</CardTitle>
+                  <CardTitle>Day View</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CalendarView />
+                  <CalendarView className="w-full h-full" />
                 </CardContent>
               </Card>
               <div className="space-y-4">
@@ -71,12 +77,85 @@ export default function CalendarPage() {
                     <UpcomingAppointments />
                   </CardContent>
                 </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Special Occasions</CardTitle>
+                    <CardDescription>Upcoming birthdays and holidays</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SpecialOccasions />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="week" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-[1fr_300px]">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Week View</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CalendarView className="w-full h-full" />
+                </CardContent>
+              </Card>
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Upcoming Appointments</CardTitle>
+                    <CardDescription>You have 5 appointments today</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <UpcomingAppointments />
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Special Occasions</CardTitle>
+                    <CardDescription>Upcoming birthdays and holidays</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SpecialOccasions />
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="month" className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-[1fr_300px]">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Month View</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CalendarView className="w-full h-full" />
+                </CardContent>
+              </Card>
+              <div className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Upcoming Appointments</CardTitle>
+                    <CardDescription>You have 5 appointments today</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <UpcomingAppointments />
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Special Occasions</CardTitle>
+                    <CardDescription>Upcoming birthdays and holidays</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <SpecialOccasions />
+                  </CardContent>
+                </Card>
               </div>
             </div>
           </TabsContent>
         </Tabs>
       </main>
     </div>
-  )
+  );
 }
 

@@ -1,6 +1,9 @@
+"use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar"
 import { Badge } from "~/components/ui/badge"
 import { Calendar, Clock, MapPin } from "lucide-react"
+import { useState } from "react";
 
 const appointments = [
   {
@@ -29,9 +32,12 @@ const appointments = [
 ]
 
 export function UpcomingAppointments() {
+  const [collapsed, setCollapsed] = useState(true);
+  const visibleAppointments = collapsed ? appointments.slice(0, 2) : appointments;
+
   return (
     <div className="space-y-4">
-      {appointments.map((appointment) => (
+      {visibleAppointments.map((appointment) => (
         <div key={appointment.id} className="flex flex-col gap-2 rounded-lg border p-3">
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -58,7 +64,13 @@ export function UpcomingAppointments() {
           ) : null}
         </div>
       ))}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="text-blue-500 hover:underline"
+      >
+        {collapsed ? "Show More" : "Show Less"}
+      </button>
     </div>
-  )
+  );
 }
 
