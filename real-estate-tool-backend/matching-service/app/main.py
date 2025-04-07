@@ -93,9 +93,9 @@ def get_suggested_properties(buyer_id: int, db: Session = Depends(database.get_d
     properties = db.query(models.Property).all()
     print(f"[DEBUG] Properties: {properties}")
     
-    # Find matching properties
+    # Find matching properties (now returns dicts with match_score included)
     suggested_properties = matching.find_suggested_properties(buyer, properties)
-    print(f"[DEBUG] Suggested: suggested_properties")
+    print(f"[DEBUG] Suggested properties count: {len(suggested_properties)}")
     
     return {
         "buyer": buyer,

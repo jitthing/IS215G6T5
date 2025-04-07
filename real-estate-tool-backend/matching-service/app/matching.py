@@ -17,7 +17,7 @@ def get_buyer_embedding(buyer: Buyer) -> np.ndarray:
     """Convert buyer preferences to an embedding vector"""
     return model.encode(buyer.preferences)
 
-def find_matching_buyers(property: Property, buyers: List[Buyer], top_n: int = 5) -> List[Buyer]:
+def find_matching_buyers(property: Property, buyers: List[Buyer], top_n: int = 5) -> List[dict]:
     """Find the top N buyers that match a property based on semantic similarity"""
     if not buyers:
         return []
@@ -30,15 +30,20 @@ def find_matching_buyers(property: Property, buyers: List[Buyer], top_n: int = 5
         buyer_embedding = get_buyer_embedding(buyer)
         # Cosine similarity
         similarity = np.dot(property_embedding, buyer_embedding) / (np.linalg.norm(property_embedding) * np.linalg.norm(buyer_embedding))
-        buyer_scores.append((buyer, similarity))
+        # Convert Buyer object to dict and add match_score
+        buyer_dict = {**buyer.__dict__}
+        if '_sa_instance_state' in buyer_dict:
+            buyer_dict.pop('_sa_instance_state')
+        buyer_dict['match_score'] = int(similarity * 100)  # Convert to percentage
+        buyer_scores.append((buyer_dict, similarity))
     
     # Sort by similarity score (highest first)
     buyer_scores.sort(key=lambda x: x[1], reverse=True)
     
-    # Return top N buyers
+    # Return top N buyers with scores included
     return [buyer for buyer, _ in buyer_scores[:top_n]]
 
-def find_suggested_properties(buyer: Buyer, properties: List[Property], top_n: int = 5) -> List[Property]:
+def find_suggested_properties(buyer: Buyer, properties: List[Property], top_n: int = 5) -> List[dict]:
     """Find the top N properties that match a buyer based on semantic similarity"""
     if not properties:
         return []
@@ -51,10 +56,15 @@ def find_suggested_properties(buyer: Buyer, properties: List[Property], top_n: i
         property_embedding = get_property_embedding(property)
         # Cosine similarity
         similarity = np.dot(buyer_embedding, property_embedding) / (np.linalg.norm(buyer_embedding) * np.linalg.norm(property_embedding))
-        property_scores.append((property, similarity))
+        # Convert Property object to dict and add match_score
+        property_dict = {**property.__dict__}
+        if '_sa_instance_state' in property_dict:
+            property_dict.pop('_sa_instance_state')
+        property_dict['match_score'] = int(similarity * 100)  # Convert to percentage
+        property_scores.append((property_dict, similarity))
     
     # Sort by similarity score (highest first)
     property_scores.sort(key=lambda x: x[1], reverse=True)
     
-    # Return top N properties
+    # Return top N properties with scores included
     return [property for property, _ in property_scores[:top_n]]

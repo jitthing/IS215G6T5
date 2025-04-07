@@ -51,6 +51,7 @@ interface Property {
     town: string,
     street_name: string,
     asking_price: number,
+    match_score?: number, // Add match_score as optional property
 }
 
 const MATCHING_SERVICE = process.env.NEXT_PUBLIC_MATCHING_SERVICE
@@ -203,10 +204,18 @@ export function BuyerTable({ filter = null }) {
               matchedProperties.map(property => (
                 <Card key={property.id}>
                   <CardHeader className="pb-2">
-                    {/* <div className="flex justify-between">
-                      <CardTitle>{property.address}</CardTitle>
-                      <Badge className="bg-green-600">{property.match_score}% Match</Badge>
-                    </div> */}
+                    <div className="flex justify-between items-center">
+                      <CardTitle>{property.block} {property.street_name}</CardTitle>
+                      {property.match_score && (
+                        <Badge className={`${
+                          property.match_score >= 50 ? 'bg-green-600' : 
+                          property.match_score >= 40 ? 'bg-yellow-500' : 
+                          'bg-orange-500'
+                        }`}>
+                          {property.match_score}% Match
+                        </Badge>
+                      )}
+                    </div>
                     <CardDescription>{property.town} | {property.flat_type} | {property.property_type}</CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -220,8 +229,8 @@ export function BuyerTable({ filter = null }) {
                         <p>{property.floor_area_sqm} sqm</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium">Seller</p>
-                        <p>{property.seller_id}</p>
+                        <p className="text-sm font-medium">Lease</p>
+                        <p>{property.remaining_lease_years}y {property.remaining_lease_months}m</p>
                       </div>
                     </div>
                     <div className="mt-4 flex gap-2">

@@ -40,6 +40,7 @@ interface Buyer {
   name: string;
   contact: string;
   preferences: string;
+  match_score?: number; // Add optional match score property
 }
 
 const clients = [
@@ -212,12 +213,14 @@ export function ClientTable() {
             name: "John Smith",
             contact: "+65 91234567",
             preferences: "Looking for a 3-room flat in Ang Mo Kio with good ventilation, near MRT, below 300k",
+            match_score: 85 // Add mock match score
           },
           {
             id: 2,
             name: "Sarah Johnson",
             contact: "+65 99876543",
             preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k",
+            match_score: 78 // Add mock match score
           },
         ],
       };
@@ -235,12 +238,14 @@ export function ClientTable() {
             name: "Emily Wilson",
             contact: "+65 97890123",
             preferences: "Looking for an executive flat in Tampines, at least 110 sqm, remaining lease > 70 years",
+            match_score: 92 // Add mock match score
           },
           {
             id: 2,
             name: "Sarah Johnson",
             contact: "+65 99876543",
             preferences: "Interested in a 4-room flat in Bishan, high floor, good school zone, budget 450k",
+            match_score: 67 // Add mock match score
           },
         ];
       }
@@ -296,6 +301,14 @@ export function ClientTable() {
       currency: "SGD",
       maximumFractionDigits: 0,
     }).format(amount);
+  };
+
+  const getMatchScoreColor = (score: number) => {
+    if (score >= 90) return "bg-green-500 text-white";
+    if (score >= 80) return "bg-green-400 text-white";
+    if (score >= 70) return "bg-amber-500 text-white";
+    if (score >= 60) return "bg-amber-400 text-white";
+    return "bg-gray-500 text-white";
   };
 
   return (
@@ -467,13 +480,20 @@ export function ClientTable() {
                     </h3>
                     {matchingBuyers.map((buyer) => (
                       <div key={buyer.id} className="border rounded-lg p-4">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Avatar className="h-8 w-8">
-                            <AvatarFallback>
-                              {buyer.name.split(" ").map((n) => n[0]).join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <h3 className="font-bold">{buyer.name}</h3>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarFallback>
+                                {buyer.name.split(" ").map((n) => n[0]).join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <h3 className="font-bold">{buyer.name}</h3>
+                          </div>
+                          {buyer.match_score !== undefined && (
+                            <Badge className={`${getMatchScoreColor(buyer.match_score)}`}>
+                              {buyer.match_score}% Match
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-sm text-gray-500 mb-2">{buyer.contact}</p>
                         <div className="flex items-start gap-2">
