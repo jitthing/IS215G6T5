@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "~/components/ui/table"
+} from "~/components/ui/table";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,48 +16,54 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu"
+} from "~/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "~/components/ui/dialog"
-import { Button } from "~/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
-import { Badge } from "~/components/ui/badge"
-import { MoreHorizontal, ChevronDown, ChevronUp } from "lucide-react"
-import { set } from "date-fns"
+} from "~/components/ui/dialog";
+import { Button } from "~/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
+import { MoreHorizontal, ChevronDown, ChevronUp } from "lucide-react";
+import { set } from "date-fns";
 
 interface Buyer {
-    id: string,
-    name: string,
-    contact: string,
-    preferences: string,
+  id: string;
+  name: string;
+  contact: string;
+  preferences: string;
 }
 
 interface Property {
-    seller_id: number,
-    id: number,
-    remaining_lease_years: number,
-    remaining_lease_months: number,
-    floor_category: string,
-    block: string,
-    description: string,
-    floor_area_sqm: number,
-    property_type: string,
-    flat_type: string,
-    town: string,
-    street_name: string,
-    asking_price: number,
-    match_score?: number, // Add match_score as optional property
+  seller_id: number;
+  id: number;
+  remaining_lease_years: number;
+  remaining_lease_months: number;
+  floor_category: string;
+  block: string;
+  description: string;
+  floor_area_sqm: number;
+  property_type: string;
+  flat_type: string;
+  town: string;
+  street_name: string;
+  asking_price: number;
+  match_score?: number; // Add match_score as optional property
 }
 
-const MATCHING_SERVICE = process.env.NEXT_PUBLIC_MATCHING_SERVICE
+const MATCHING_SERVICE = process.env.NEXT_PUBLIC_MATCHING_SERVICE;
 
 export function BuyerTable({ filter = null }) {
-//   const [buyers, setBuyers] = useState<Buyer[]>(dummyBuyers);
+  //   const [buyers, setBuyers] = useState<Buyer[]>(dummyBuyers);
   const [expandedBuyer, setExpandedBuyer] = useState<string | null>(null);
   const [selectedBuyer, setSelectedBuyer] = useState<Buyer>();
   const [matchedProperties, setMatchedProperties] = useState<Property[]>([]);
@@ -66,15 +72,17 @@ export function BuyerTable({ filter = null }) {
 
   const handleViewMatches = (buyer: Buyer) => {
     const fetchMatches = async () => {
-        const properties = await fetch(`${MATCHING_SERVICE}/buyers/${buyer.id}/suggested-properties`);
-        if (!properties.ok) {
-            throw new Error("Failed to fetch properties");
-        }
-        const data = await properties.json();
-        setSelectedBuyer(buyer);
-        setMatchedProperties(data.suggested_properties);
-        setDialogOpen(true);
-    }
+      const properties = await fetch(
+        `${MATCHING_SERVICE}/buyers/${buyer.id}/suggested-properties`,
+      );
+      if (!properties.ok) {
+        throw new Error("Failed to fetch properties");
+      }
+      const data = await properties.json();
+      setSelectedBuyer(buyer);
+      setMatchedProperties(data.suggested_properties);
+      setDialogOpen(true);
+    };
     fetchMatches();
   };
 
@@ -90,12 +98,11 @@ export function BuyerTable({ filter = null }) {
       }
       const data = await buyers.json();
       setBuyers(data);
-    }
+    };
     if (buyers.length === 0) {
       fetchBuyers();
     }
   }, []);
-  
 
   return (
     <>
@@ -112,17 +119,21 @@ export function BuyerTable({ filter = null }) {
           </TableHeader>
           <TableBody>
             {buyers.map((buyer) => (
-                <>
+              <>
                 <TableRow key={buyer.id} className="hover:bg-gray-50">
                   <TableCell className="font-medium">
                     <div className="flex items-center gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="p-0 h-6 w-6" 
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 w-6 p-0"
                         onClick={() => toggleExpand(buyer.id)}
                       >
-                        {expandedBuyer === buyer.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        {expandedBuyer === buyer.id ? (
+                          <ChevronUp size={16} />
+                        ) : (
+                          <ChevronDown size={16} />
+                        )}
                       </Button>
                       {buyer.name}
                     </div>
@@ -147,9 +158,15 @@ export function BuyerTable({ filter = null }) {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => handleViewMatches(buyer)}>View Matched Properties</DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleViewMatches(buyer)}
+                        >
+                          View Matched Properties
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Edit Buyer</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">Delete Buyer</DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">
+                          Delete Buyer
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
@@ -168,12 +185,14 @@ export function BuyerTable({ filter = null }) {
                             <p className="text-sm">{buyer.email}</p>
                           </div> */}
                           <div className="col-span-2">
-                            <p className="text-sm font-medium">Full Preferences</p>
+                            <p className="text-sm font-medium">
+                              Full Preferences
+                            </p>
                             <p className="text-sm">{buyer.preferences}</p>
                           </div>
                           <div className="col-span-2">
-                            <Button 
-                              variant="outline" 
+                            <Button
+                              variant="outline"
                               size="sm"
                               onClick={() => handleViewMatches(buyer)}
                             >
@@ -192,37 +211,50 @@ export function BuyerTable({ filter = null }) {
       </div>
 
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+        <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Matched Properties for {selectedBuyer?.name}</DialogTitle>
+            <DialogTitle>
+              Matched Properties for {selectedBuyer?.name}
+            </DialogTitle>
             <DialogDescription>
               Based on buyer's preferences: {selectedBuyer?.preferences}
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             {matchedProperties.length > 0 ? (
-              matchedProperties.map(property => (
+              matchedProperties.map((property) => (
                 <Card key={property.id}>
                   <CardHeader className="pb-2">
-                    <div className="flex justify-between items-center">
-                      <CardTitle>{property.block} {property.street_name}</CardTitle>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>
+                        {property.block} {property.street_name}
+                      </CardTitle>
                       {property.match_score && (
-                        <Badge className={`${
-                          property.match_score >= 50 ? 'bg-green-600' : 
-                          property.match_score >= 40 ? 'bg-yellow-500' : 
-                          'bg-orange-500'
-                        }`}>
+                        <Badge
+                          className={`${
+                            property.match_score >= 50
+                              ? "bg-green-600"
+                              : property.match_score >= 40
+                                ? "bg-yellow-500"
+                                : "bg-orange-500"
+                          }`}
+                        >
                           {property.match_score}% Match
                         </Badge>
                       )}
                     </div>
-                    <CardDescription>{property.town} | {property.flat_type} | {property.property_type}</CardDescription>
+                    <CardDescription>
+                      {property.town} | {property.flat_type} |{" "}
+                      {property.property_type}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-3 gap-4">
                       <div>
                         <p className="text-sm font-medium">Price</p>
-                        <p className="text-lg font-bold">${property.asking_price.toLocaleString()}</p>
+                        <p className="text-lg font-bold">
+                          ${property.asking_price.toLocaleString()}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm font-medium">Area</p>
@@ -230,18 +262,23 @@ export function BuyerTable({ filter = null }) {
                       </div>
                       <div>
                         <p className="text-sm font-medium">Lease</p>
-                        <p>{property.remaining_lease_years}y {property.remaining_lease_months}m</p>
+                        <p>
+                          {property.remaining_lease_years}y{" "}
+                          {property.remaining_lease_months}m
+                        </p>
                       </div>
                     </div>
                     <div className="mt-4 flex gap-2">
-                      <Button variant="outline" size="sm">View Property Details</Button>
+                      <Button variant="outline" size="sm">
+                        View Property Details
+                      </Button>
                       <Button size="sm">Contact Seller</Button>
                     </div>
                   </CardContent>
                 </Card>
               ))
             ) : (
-              <div className="text-center py-8">
+              <div className="py-8 text-center">
                 <p>No matching properties found</p>
               </div>
             )}
@@ -249,5 +286,5 @@ export function BuyerTable({ filter = null }) {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }

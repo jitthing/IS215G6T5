@@ -1,8 +1,7 @@
-"use client"
+"use client";
 
-import { Calendar } from "~/components/ui/calendar"
+import { Calendar } from "~/components/ui/calendar";
 
 export function CalendarView() {
-  return <Calendar mode="single" className="w-full h-full" />
+  return <Calendar mode="single" className="mx-auto h-full w-full" />;
 }
-

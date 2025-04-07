@@ -1,14 +1,26 @@
-"use client"
+"use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
-import { CalendarView } from "~/components/calendar-view"
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react"
-import { Button } from "~/components/ui/button"
-import { UpcomingAppointments } from "~/components/upcoming-appointments"
-import { SpecialOccasions } from "~/components/special-occasions"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { CalendarView } from "~/components/calendar-view";
+import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { UpcomingAppointments } from "~/components/upcoming-appointments";
+import { SpecialOccasions } from "~/components/special-occasions";
 
 export default function CalendarPage() {
   const [view, setView] = useState("month");
@@ -64,14 +76,16 @@ export default function CalendarPage() {
                   <CardTitle>Day View</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CalendarView className="w-full h-full" />
+                  <CalendarView />
                 </CardContent>
               </Card>
               <div className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Upcoming Appointments</CardTitle>
-                    <CardDescription>You have 5 appointments today</CardDescription>
+                    <CardDescription>
+                      You have 5 appointments today
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <UpcomingAppointments />
@@ -80,7 +94,9 @@ export default function CalendarPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Special Occasions</CardTitle>
-                    <CardDescription>Upcoming birthdays and holidays</CardDescription>
+                    <CardDescription>
+                      Upcoming birthdays and holidays
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <SpecialOccasions />
@@ -96,14 +112,16 @@ export default function CalendarPage() {
                   <CardTitle>Week View</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CalendarView className="w-full h-full" />
+                  <CalendarView />
                 </CardContent>
               </Card>
               <div className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Upcoming Appointments</CardTitle>
-                    <CardDescription>You have 5 appointments today</CardDescription>
+                    <CardDescription>
+                      You have 5 appointments today
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <UpcomingAppointments />
@@ -112,7 +130,9 @@ export default function CalendarPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Special Occasions</CardTitle>
-                    <CardDescription>Upcoming birthdays and holidays</CardDescription>
+                    <CardDescription>
+                      Upcoming birthdays and holidays
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <SpecialOccasions />
@@ -128,14 +148,16 @@ export default function CalendarPage() {
                   <CardTitle>Month View</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CalendarView className="w-full h-full" />
+                  <CalendarView />
                 </CardContent>
               </Card>
               <div className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Upcoming Appointments</CardTitle>
-                    <CardDescription>You have 5 appointments today</CardDescription>
+                    <CardDescription>
+                      You have 5 appointments today
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <UpcomingAppointments />
@@ -144,7 +166,9 @@ export default function CalendarPage() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Special Occasions</CardTitle>
-                    <CardDescription>Upcoming birthdays and holidays</CardDescription>
+                    <CardDescription>
+                      Upcoming birthdays and holidays
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <SpecialOccasions />
@@ -158,4 +182,3 @@ export default function CalendarPage() {
     </div>
   );
 }
-

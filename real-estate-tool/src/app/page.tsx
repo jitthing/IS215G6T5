@@ -45,50 +45,68 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card className="h-32">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Number of Leads</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">
+                Number of Leads
+              </CardTitle>
+              <Users className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">24</div>
-              <p className="text-xs text-muted-foreground">+8 from last month</p>
+              <p className="text-muted-foreground text-xs">
+                +8 from last month
+              </p>
             </CardContent>
           </Card>
           <Card className="h-32">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Number of Opportunities</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">
+                Number of Opportunities
+              </CardTitle>
+              <TrendingUp className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">15</div>
-              <p className="text-xs text-muted-foreground">+5 from last month</p>
+              <p className="text-muted-foreground text-xs">
+                +5 from last month
+              </p>
             </CardContent>
           </Card>
           <Card className="h-32">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
-              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">
+                Conversion Rate
+              </CardTitle>
+              <TrendingUp className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">62%</div>
-              <p className="text-xs text-muted-foreground">+5% from last month</p>
+              <p className="text-muted-foreground text-xs">
+                +5% from last month
+              </p>
             </CardContent>
           </Card>
           <Card className="h-32">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Average Time to Sell</CardTitle>
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">
+                Average Time to Sell
+              </CardTitle>
+              <Clock className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="text-xl font-bold">45 days</div>
-              <p className="text-xs text-muted-foreground">-3 days from last month</p>
+              <p className="text-muted-foreground text-xs">
+                -3 days from last month
+              </p>
             </CardContent>
           </Card>
         </div>
         <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
           <Card className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Clients by Stages</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">
+                Clients by Stages
+              </CardTitle>
+              <Users className="text-muted-foreground h-4 w-4" />
             </CardHeader>
             <CardContent>
               <div className="flex justify-between space-x-4">
@@ -115,10 +133,13 @@ export default function Dashboard() {
         <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-1">
           <Card className="col-span-1">
             <CardHeader>
-              <CardTitle>Revenue</CardTitle>
+              <CardTitle>Revenue (SGD)</CardTitle>
             </CardHeader>
             <CardContent className="pl-2">
-              <Overview type="stacked-bar" legend={['Actual Revenue', 'Potential Revenue']} />
+              <Overview
+                type="stacked-bar"
+                legend={["Actual Revenue", "Potential Revenue"]}
+              />
             </CardContent>
           </Card>
         </div>
@@ -126,7 +147,9 @@ export default function Dashboard() {
           <Card className="col-span-1">
             <CardHeader>
               <CardTitle>Recent Properties</CardTitle>
-              <CardDescription>You have added 12 properties this month.</CardDescription>
+              <CardDescription>
+                You have added 12 properties this month.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <RecentProperties />
@@ -143,7 +166,9 @@ export default function Dashboard() {
           <Card className="col-span-1">
             <CardHeader>
               <CardTitle>Recent Leads</CardTitle>
-              <CardDescription>You have 24 new leads this month.</CardDescription>
+              <CardDescription>
+                You have 24 new leads this month.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <RecentLeads />
@@ -162,4 +187,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
